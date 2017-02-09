@@ -4,7 +4,7 @@ Polling the weekly speed camera announcements from Polizei Mannheim off their fa
 
 ## Historic posts by [@PolizeiMannheim](https://www.facebook.com/PolizeiMannheim/)
 
-**[February 6 at 8:12am](https://www.facebook.com/PolizeiMannheim/photos/a.467787796625309.1073741825.377218659015557/1413037895433623/)**
+### [February 6 at 8:12am](https://www.facebook.com/PolizeiMannheim/photos/a.467787796625309.1073741825.377218659015557/1413037895433623/)
 ````
 #Geschwindigkeitskontrollen in #Mannheim #Heidelberg #RheinNeckarKreis
 Auch diese Woche sollte das Motto sein:
@@ -42,7 +42,7 @@ Also vorsichtig fahren, #8geben und #uffbasse!
 Eure Polizei
 ````
 
-**[January 30 at 8:03am](https://www.facebook.com/PolizeiMannheim/photos/a.467787796625309.1073741825.377218659015557/1404265232977556/)**
+### [January 30 at 8:03am](https://www.facebook.com/PolizeiMannheim/photos/a.467787796625309.1073741825.377218659015557/1404265232977556/)
 ````
 #Geschwindigkeitskontrollen in #Mannheim #Heidelberg #RheinNeckarKreis
 
