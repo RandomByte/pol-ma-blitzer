@@ -1,0 +1,32 @@
+{
+    "env": {
+        "node": true,
+        "browser": true
+    },
+    "extends": "google",
+    "rules": {
+        "indent": [
+            "error",
+            "tab"
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-negated-condition": "off",
+        "require-jsdoc": "off",
+        "no-mixed-requires": "off",
+        "max-len": ["warn", 120]
+    },
+    "globals": {
+        "jQuery": true
+    }
+}
