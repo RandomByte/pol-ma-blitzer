@@ -4,7 +4,7 @@
   "description": "Polling the weekly speed camera announcements from Polizei Mannheim off their facebook page",
   "main": "index.js",
   "scripts": {
-    "start": "DEBUG=pol-ma-blitzer node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

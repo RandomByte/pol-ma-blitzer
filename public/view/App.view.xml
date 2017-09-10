@@ -1,0 +1,27 @@
+<mvc:View
+	controllerName="pol.ma.blitzer.controller.App"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+	<App>
+		<Page enableScrolling="true" title="Possible speed camera locations for this week" titleLevel="H2" showFooter="false">
+			<content>
+				<FormattedText htmlText="&#60;p&#62;Based on &#60;a href='{=${/post/permalink_url}}'&#62;this&#60;/a&#62; facebook post from {=Math.floor(${/post/_ageInDays})} days ago. (List may not be complete)&#60;p&#62;"/>
+				<List
+					items="{
+						path: '/locations',
+						sorter: {
+							path: 'region',
+							descending: false,
+							group: true
+						},
+						groupHeaderFactory: '.getGroupHeader'
+					}"
+					headerText="Possible locations" >
+					<StandardListItem
+						title="{location}"
+						description="{region}" />
+				</List>
+			</content>
+		</Page>
+	</App>
+</mvc:View>

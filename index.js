@@ -3,7 +3,10 @@ const graph = require("fbgraph");
 const express = require("express");
 const app = express();
 const config = require("./config.json");
-let latestPost = {};
+const currentData = {
+	latestPost: {},
+	timestamp: 0
+};
 
 if (!config || !config.fbAccessToken) {
 	console.log("Config or facebook access token missing!");
@@ -14,7 +17,7 @@ graph.setAccessToken(config.fbAccessToken);
 
 function retrievePosts() {
 	return new Promise(function(resolve, reject) {
-		graph.get("PolizeiMannheim/posts", function(err, res) {
+		graph.get("PolizeiMannheim/posts?fields=id,message,created_time,permalink_url", function(err, res) {
 			if (err) {
 				reject(err);
 				return;
@@ -85,16 +88,27 @@ function findLatestPost(posts) {
 
 app.use("/", express.static('public'))
 app.get("/api/latestPost", function(req, res){
-	res.json(latestPost);
+	if ((new Date().getTime() - currentData.timestamp) / 1000 / 60 / 60 > 4) {
+		updateData().then(function() {
+			res.json(currentData.latestPost);
+		})
+	} else {
+		res.json(currentData.latestPost);
+	}
 });
 
-const httpServer = app.listen(config.httpPort, function() {
-	console.log(`Server listening on port ${config.httpPort}...`);
-});
+updateData().then(function() {
+	app.listen(config.httpPort, function() {
+		console.log(`Server listening on port ${config.httpPort}...`);
+	});
+})
 
-retrievePosts().then(findLatestPost).then(function(post) {
-	latestPost = post;
-}).catch(function(err) {
-	console.log(err);
-	process.exit(1);
-});
+function updateData() {
+	return retrievePosts().then(findLatestPost).then(function(post) {
+		currentData.latestPost = post;
+		currentData.timestamp = new Date().getTime()
+	}).catch(function(err) {
+		console.log(err);
+		throw err;
+	});
+}
