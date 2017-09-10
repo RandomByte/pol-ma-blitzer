@@ -1,6 +1,9 @@
 const debug = require("debug")("pol-ma-blitzer");
 const graph = require("fbgraph");
+const express = require("express");
+const app = express();
 const config = require("./config.json");
+let latestPost = {};
 
 if (!config || !config.fbAccessToken) {
 	console.log("Config or facebook access token missing!");
@@ -18,10 +21,12 @@ function retrievePosts() {
 			}
 			let posts = res.data;
 			let matches = [];
+			let today = new Date().getTime();
 
 			for (let i = 0; i < posts.length; i++) {
 				let post = posts[i];
 				if (post.message.match(/#Geschwindigkeitskontrollen/i)) {
+					post._ageInDays = (today - new Date(post.created_time).getTime()) / 1000 / 60 / 60 / 24;
 					matches.push(post);
 				}
 			}
@@ -57,16 +62,38 @@ function findLocations(post) {
 	});
 }
 
-retrievePosts().then(function(posts) {
+function findLatestPost(posts) {
+	debug("Searching for latest post about speed camera locations...");
 	return Promise.all(posts.map(function(post) {
-		return findLocations(post);
+		return findLocations(post).then((locations) => {
+			return { locations, post }; 
+		});
 	})).then(function(findings) {
-		let count = 0;
-		for (var i = findings.length - 1; i >= 0; i--) {
-			count += findings[i].length;
-		}
-		debug("Found %d locations in %d posts", count, findings.length);
+		findings = findings.filter(function(finding) {
+			return finding.locations.length > 0;
+		})
+
+		findings.sort(function(a, b) {
+			return a.post._ageInDays - b.post._ageInDays;
+		});
+
+		const post = findings[0];
+		debug("Found post from %d days ago containing %d locations", Math.floor(post.post._ageInDays), post.locations.length);
+		return post;
 	});
+}
+
+app.use("/", express.static('public'))
+app.get("/api/latestPost", function(req, res){
+	res.json(latestPost);
+});
+
+const httpServer = app.listen(config.httpPort, function() {
+	console.log(`Server listening on port ${config.httpPort}...`);
+});
+
+retrievePosts().then(findLatestPost).then(function(post) {
+	latestPost = post;
 }).catch(function(err) {
 	console.log(err);
 	process.exit(1);
