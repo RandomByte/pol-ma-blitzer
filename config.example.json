@@ -1,4 +1,4 @@
 {
     "httpPort": 45000,
-    "fbAccessToken": ""
+    "fbAccessToken": "<< run node getFbAccessToken.js --appId '<App ID>' --appSecret '<App Secret>' >>"
 }
