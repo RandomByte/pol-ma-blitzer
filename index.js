@@ -2,6 +2,11 @@ const debug = require("debug")("pol-ma-blitzer");
 const graph = require("fbgraph");
 const config = require("./config.json");
 
+if (!config || !config.fbAccessToken) {
+	console.log("Config or facebook access token missing!");
+	process.exit(1);
+}
+
 graph.setAccessToken(config.fbAccessToken);
 
 function retrievePosts() {
@@ -62,4 +67,7 @@ retrievePosts().then(function(posts) {
 		}
 		debug("Found %d locations in %d posts", count, findings.length);
 	});
+}).catch(function(err) {
+	console.log(err);
+	process.exit(1);
 });
