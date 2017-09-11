@@ -68,30 +68,31 @@ function findLocations(post) {
 function findLatestPost(posts) {
 	debug("Searching for latest post about speed camera locations...");
 	return Promise.all(posts.map(function(post) {
-		return findLocations(post).then((locations) => {
-			return { locations, post }; 
+		return findLocations(post).then(locations => {
+			return {locations, post};
 		});
 	})).then(function(findings) {
 		findings = findings.filter(function(finding) {
 			return finding.locations.length > 0;
-		})
+		});
 
 		findings.sort(function(a, b) {
 			return a.post._ageInDays - b.post._ageInDays;
 		});
 
 		const post = findings[0];
-		debug("Found post from %d days ago containing %d locations", Math.floor(post.post._ageInDays), post.locations.length);
+		debug("Found post from %d days ago containing %d locations",
+			Math.floor(post.post._ageInDays), post.locations.length);
 		return post;
 	});
 }
 
-app.use("/", express.static('public'))
-app.get("/api/latestPost", function(req, res){
-	if ((new Date().getTime() - currentData.timestamp) / 1000 / 60 / 60 > 4) {
+app.use("/", express.static("public"));
+app.get("/api/latestPost", function(req, res) {
+	if ((new Date().getTime() - currentData.timestamp) / 1000 / 60 / 60 > 1) {
 		updateData().then(function() {
 			res.json(currentData.latestPost);
-		})
+		});
 	} else {
 		res.json(currentData.latestPost);
 	}
@@ -101,12 +102,12 @@ updateData().then(function() {
 	app.listen(config.httpPort, function() {
 		console.log(`Server listening on port ${config.httpPort}...`);
 	});
-})
+});
 
 function updateData() {
 	return retrievePosts().then(findLatestPost).then(function(post) {
 		currentData.latestPost = post;
-		currentData.timestamp = new Date().getTime()
+		currentData.timestamp = new Date().getTime();
 	}).catch(function(err) {
 		console.log(err);
 		throw err;
